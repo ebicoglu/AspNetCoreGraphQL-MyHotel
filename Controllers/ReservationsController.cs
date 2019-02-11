@@ -1,32 +1,25 @@
 using System.Collections.Generic;
-using System.Linq;
-using AutoMapper.QueryableExtensions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MyHotel.EntityFrameworkCore;
 using MyHotel.Models;
+using MyHotel.Repositories;
 
 namespace MyHotel.Controllers
 {
     [Route("api/[controller]")]
     public class ReservationsController : Controller
     {
-        private readonly MyHotelDbContext _myHotelDbContext;
+        private readonly ReservationRepository _reservationRepository;
 
-        public ReservationsController(MyHotelDbContext myHotelDbContext)
+        public ReservationsController(ReservationRepository reservationRepository)
         {
-            _myHotelDbContext = myHotelDbContext;
+            _reservationRepository = reservationRepository;
         }
 
         [HttpGet("[action]")]
-        public List<ReservationModel> List()
+        public async Task<List<ReservationModel>> List()
         {
-            return _myHotelDbContext
-                .Reservations
-                .Include(x => x.Room)
-                .Include(x => x.Guest)
-                .ProjectTo<ReservationModel>()
-                .ToList();
+            return await _reservationRepository.GetAll<ReservationModel>();
         }
     }
 }
