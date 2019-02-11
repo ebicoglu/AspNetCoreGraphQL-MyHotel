@@ -27,11 +27,10 @@ namespace MyHotel.Entities
 
         }
 
-        public Reservation(DateTime checkinDate, DateTime checkoutDate, Room room, int roomId, int guestId)
+        public Reservation(DateTime checkinDate, DateTime checkoutDate, int roomId, int guestId)
         {
             CheckinDate = checkinDate;
             CheckoutDate = checkoutDate;
-            Room = room;
             RoomId = roomId;
             GuestId = guestId;
         }
