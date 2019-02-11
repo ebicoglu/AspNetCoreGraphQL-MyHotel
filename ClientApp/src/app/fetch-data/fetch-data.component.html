@@ -1,0 +1,22 @@
+<h1>Reservations ({{reservations ? reservations.length : 0}})</h1>
+
+<p *ngIf="!reservations"><em>Loading...</em></p>
+
+<table class='table' *ngIf="reservations">
+  <thead class="thead-dark">
+    <tr>
+      <th>Guest Name</th>
+      <th>Room Number</th>
+      <th>Checkin Date</th>
+      <th>Checkout Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let reservation of reservations">
+      <td>{{ reservation.guest.name }}</td>
+      <td>{{ reservation.room.number }}</td>
+      <td>{{ reservation.checkinDate | date: 'dd.MM.yyyy'}}</td>
+      <td>{{ reservation.checkoutDate | date: 'dd.MM.yyyy' }}</td>
+    </tr>
+  </tbody>
+</table>
