@@ -32,8 +32,8 @@ namespace MyHotel.EntityFrameworkCore
             modelBuilder.Entity<Room>().HasData(new Room(104, "black-room", RoomStatus.Unavailable, false) { Id = 4 });
 
             //RESERVATIONS
-            modelBuilder.Entity<Reservation>().HasData(new Reservation(DateTime.Now, DateTime.Now.AddDays(10), 3, 1) { Id = 1 });
-            modelBuilder.Entity<Reservation>().HasData(new Reservation(DateTime.Now, DateTime.Now.AddDays(10), 4, 2) { Id = 2 });
+            modelBuilder.Entity<Reservation>().HasData(new Reservation(DateTime.Now.AddDays(-2), DateTime.Now.AddDays(10), 3, 1) { Id = 1 });
+            modelBuilder.Entity<Reservation>().HasData(new Reservation(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(10), 4, 2) { Id = 2 });
 
 
             base.OnModelCreating(modelBuilder);
