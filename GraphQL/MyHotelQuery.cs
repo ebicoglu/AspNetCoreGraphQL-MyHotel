@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using GraphQL.Types;
 using MyHotel.Entities;
 using MyHotel.GraphQL.Types;
@@ -69,6 +70,9 @@ namespace MyHotel.GraphQL
                 resolve: context =>
                 {
                     var query = reservationRepository.GetQuery();
+
+                    var user = (ClaimsPrincipal)context.UserContext;
+                    var isUserAuthenticated = ((ClaimsIdentity) user.Identity).IsAuthenticated;
 
                     var reservationId = context.GetArgument<int?>("id");
                     if (reservationId.HasValue)

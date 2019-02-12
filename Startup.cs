@@ -49,11 +49,13 @@ namespace MyHotel
             services.AddScoped<MyHotelSchema>();
 
             services.AddGraphQL(x =>
-            {
-                x.ExposeExceptions = true; //set true only in dev mode.
-            })
-            .AddGraphTypes(ServiceLifetime.Scoped);
-
+                {
+                    x.ExposeExceptions = true; //set true only in dev mode.
+                })
+                .AddGraphTypes(ServiceLifetime.Scoped)
+                .AddUserContextBuilder(httpContext => httpContext.User)
+                .AddDataLoader();
+            
             //***</ GraphQL Services >*** 
         }
 
