@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using MyHotel.Entities;
 using MyHotel.EntityFrameworkCore;
 
 namespace MyHotel.Repositories
@@ -22,6 +23,15 @@ namespace MyHotel.Repositories
                 .Include(x => x.Room)
                 .Include(x => x.Guest)
                 .ProjectTo<T>()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Reservation>> GetAll()
+        {
+            return await _myHotelDbContext
+                .Reservations
+                .Include(x => x.Room)
+                .Include(x => x.Guest)
                 .ToListAsync();
         }
     }

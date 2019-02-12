@@ -1,4 +1,7 @@
 using AutoMapper;
+using GraphQL;
+using GraphQL.Server;
+using GraphQL.Server.Ui.Playground;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyHotel.Entities;
 using MyHotel.EntityFrameworkCore;
+using MyHotel.GraphQL;
 using MyHotel.Models;
 using MyHotel.Repositories;
 
@@ -37,6 +41,20 @@ namespace MyHotel
             services.AddDbContext<MyHotelDbContext>(options => options.UseSqlServer(MyHotelDbContext.DbConnectionString));
 
             services.AddTransient<ReservationRepository>();
+
+            //***< GraphQL Services >*** 
+            services.AddScoped<IDependencyResolver>(x =>
+                new FuncDependencyResolver(x.GetRequiredService));
+
+            services.AddScoped<MyHotelSchema>();
+
+            services.AddGraphQL(x =>
+            {
+                x.ExposeExceptions = true; //set true only in dev mode.
+            })
+            .AddGraphTypes(ServiceLifetime.Scoped);
+
+            //***</ GraphQL Services >*** 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +73,9 @@ namespace MyHotel
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseGraphQL<MyHotelSchema>();
+            app.UseGraphQLPlayground(new GraphQLPlaygroundOptions()); //to explorer API navigate https://*DOMAIN*/ui/playground
 
             app.UseMvc(routes =>
             {
