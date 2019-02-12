@@ -37,6 +37,11 @@ namespace MyHotel.GraphQL
 
         public MyHotelQuery(ReservationRepository reservationRepository)
         {
+            /*Version: 1 get all*/
+            //Field<ListGraphType<ReservationType>>("reservations",
+            //    resolve: context => reservationRepository.GetQuery());
+
+            /*Version: 2 filtering*/
             Field<ListGraphType<ReservationType>>("reservations",
                 arguments: new QueryArguments(new List<QueryArgument>
                 {
