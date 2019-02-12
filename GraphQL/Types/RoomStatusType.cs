@@ -5,9 +5,5 @@ namespace MyHotel.GraphQL.Types
 {
     public class RoomStatusType: EnumerationGraphType<RoomStatus>
     {
-        public RoomStatusType()
-        {
-           
-        }
     }
 }
