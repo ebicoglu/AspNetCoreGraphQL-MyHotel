@@ -8,8 +8,8 @@ namespace MyHotel.GraphQL.Types
         public ReservationType()
         {
             Field(x => x.Id);
-            Field(x => x.CheckinDate);
-            Field(x => x.CheckoutDate);
+            Field(x => x.CheckinDate).Description("The first day of the stay");
+            Field(x => x.CheckoutDate).Description("The leaving day");
             Field<GuestType>(nameof(Reservation.Guest));
             Field<RoomType>(nameof(Reservation.Room));
         }

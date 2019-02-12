@@ -1,4 +1,5 @@
-﻿using GraphQL.Types;
+﻿using System.Linq;
+using GraphQL.Types;
 using MyHotel.GraphQL.Types;
 using MyHotel.Repositories;
 
@@ -34,7 +35,19 @@ namespace MyHotel.GraphQL
         public MyHotelQuery(ReservationRepository reservationRepository)
         {
             Field<ListGraphType<ReservationType>>("reservations",
-                resolve: context => reservationRepository.GetAll());
+                resolve: context => reservationRepository.GetQuery());
+
+            Field<ReservationType>("reservation",
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IdGraphType>>
+                {
+                    Name = "id"
+                }),
+                resolve: context =>
+                {
+                    var reservationId = context.GetArgument<int>("id");
+                    return reservationRepository.Get(reservationId);
+                }
+            );
         }
     }
 }
