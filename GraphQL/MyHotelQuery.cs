@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using GraphQL;
 using GraphQL.Types;
 using MyHotel.Entities;
 using MyHotel.GraphQL.Types;
@@ -77,7 +78,15 @@ namespace MyHotel.GraphQL
                     var reservationId = context.GetArgument<int?>("id");
                     if (reservationId.HasValue)
                     {
-                        return reservationRepository.GetQuery().Where(r => r.Id == reservationId.Value);
+                        if (reservationId.Value <= 0)
+                        {
+                            context.Errors.Add(new ExecutionError("reservationId must be greater than zero!"));
+                            return new List<Reservation>();
+                        }
+                        else
+                        {
+                            return reservationRepository.GetQuery().Where(r => r.Id == reservationId.Value);
+                        }
                     }
 
                     var checkinDate = context.GetArgument<DateTime?>("checkinDate");
