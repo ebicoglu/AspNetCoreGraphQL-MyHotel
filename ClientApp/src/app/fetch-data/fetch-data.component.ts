@@ -55,6 +55,59 @@ export class FetchDataComponent {
       error => console.error(error));
   }
 
+
+  //////////////////////////   (4)   ////////////////////////////
+    fetchUsingVanillaJs(): any {
+    fetch('/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          query: 'query reservation {reservations {checkinDate guest  {name} room {name}}}'
+        })
+      })
+      .then(r => r.json())
+      .then(response => {
+        this.reservations = response.data.reservations;
+        this.fetchSource = "(4) Using Vanilla JS";
+      });
+  }
+
+  //////////////////////////   (5)   ////////////////////////////
+  fetchUsingApolloClient(): any {
+
+     
+    var client = new Apollo.lib.ApolloClient(
+      {
+        networkInterface: Apollo.lib.createNetworkInterface({
+          uri: "https://localhost:44349/graphql"
+        })
+      });
+
+    const query = Apollo.gql`
+query reservation {
+  reservations {
+    checkinDate
+    guest  {
+      name
+    }
+    room {
+      name
+    }
+  }
+}`;
+     
+    client.query({
+      query: query
+    }).then(result => {
+      this.reservations = result.data.reservations;
+      this.fetchSource = "(5) Using Apollo Client";
+    });
+
+  }
+
 }
 
 interface Room {

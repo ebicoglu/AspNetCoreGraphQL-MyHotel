@@ -14,6 +14,13 @@
     (3) Fetch Directly From GraphQL
   </button>
 
+  <button class="mb-3 ml-3" (click)="fetchUsingVanillaJs()" type="button">
+    (4) Fetch Using Vanilla JS
+  </button>
+
+  <button class="mb-3 ml-3" (click)="fetchUsingApolloClient()" type="button">
+    (5) Fetch Using Apollo Client
+  </button>
 </div>
 
 <p *ngIf="!reservations" class="text-center font-italic">Click buttons to get data from host.</p>
