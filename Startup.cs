@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using GraphQL;
+using GraphQL.Client;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using Microsoft.AspNetCore.Builder;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyHotel.Entities;
 using MyHotel.EntityFrameworkCore;
 using MyHotel.GraphQL;
@@ -34,7 +34,11 @@ namespace MyHotel
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddHttpClient<MyHotelGraphqlClient>(x => x.BaseAddress = new Uri(MyHotelGraphqlClient.GraphqlAddress));
+            //***< My services >*** 
+            services.AddHttpClient<ReservationHttpGraphqlClient>(x => x.BaseAddress = new Uri(Configuration["GraphQlEndpoint"]));
+            services.AddSingleton(t => new GraphQLClient(Configuration["GraphQlEndpoint"]));
+            services.AddSingleton<ReservationGraphqlClient>();
+            //***</ My services >*** 
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -59,7 +63,7 @@ namespace MyHotel
                 .AddGraphTypes(ServiceLifetime.Scoped)
                 .AddUserContextBuilder(httpContext => httpContext.User)
                 .AddDataLoader();
-            
+
             //***</ GraphQL Services >*** 
         }
 

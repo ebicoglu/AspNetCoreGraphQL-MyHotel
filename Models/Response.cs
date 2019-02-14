@@ -10,7 +10,7 @@ namespace MyHotel.Models
 
         public List<ErrorModel> Errors { get; set; }
 
-        public void OnErrorThrowException()
+        public void ThrowExceptionOnError()
         {
             if (Errors != null && Errors.Any())
             {

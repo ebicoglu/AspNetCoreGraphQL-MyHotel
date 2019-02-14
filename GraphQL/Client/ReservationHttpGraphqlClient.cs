@@ -5,13 +5,11 @@ using Newtonsoft.Json;
 
 namespace MyHotel.GraphQL.Client
 {
-    public class MyHotelGraphqlClient
+    public class ReservationHttpGraphqlClient
     {
-        public const string GraphqlAddress = "https://localhost:44349/graphql/";
-
         private readonly HttpClient _httpClient;
 
-        public MyHotelGraphqlClient(HttpClient httpClient)
+        public ReservationHttpGraphqlClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

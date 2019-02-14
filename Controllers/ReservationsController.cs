@@ -11,12 +11,16 @@ namespace MyHotel.Controllers
     public class ReservationsController : Controller
     {
         private readonly ReservationRepository _reservationRepository;
-        private readonly MyHotelGraphqlClient _myHotelGraphqlClient;
+        private readonly ReservationHttpGraphqlClient _httpGraphqlClient;
+        private readonly ReservationGraphqlClient _graphqlClient;
 
-        public ReservationsController(ReservationRepository reservationRepository, MyHotelGraphqlClient myHotelGraphqlClient)
+        public ReservationsController(ReservationRepository reservationRepository,
+            ReservationHttpGraphqlClient httpGraphqlClient,
+            ReservationGraphqlClient graphqlClient)
         {
             _reservationRepository = reservationRepository;
-            _myHotelGraphqlClient = myHotelGraphqlClient;
+            _httpGraphqlClient = httpGraphqlClient;
+            _graphqlClient = graphqlClient;
         }
 
         [HttpGet("[action]")]
@@ -28,9 +32,24 @@ namespace MyHotel.Controllers
         [HttpGet("[action]")]
         public async Task<List<ReservationModel>> ListFromGraphql()
         {
-            var response = await _myHotelGraphqlClient.GetReservationsAsync();
-            response.OnErrorThrowException();
+            /*(Way:1) Native Http Client */
+            return await GetViaHttpGraphqlClient();
+
+            /*(Way:2) GraphQl.Client Library*/
+            //   return await GetViaGraphqlClient();
+        }
+
+        private async Task<List<ReservationModel>> GetViaHttpGraphqlClient()
+        {
+            var response = await _httpGraphqlClient.GetReservationsAsync();
+            response.ThrowExceptionOnError();
             return response.Data.Reservations;
+        }
+
+        private async Task<List<ReservationModel>> GetViaGraphqlClient()
+        {
+            var reservations = await _graphqlClient.GetReservationsAsync();
+            return reservations;
         }
 
     }
