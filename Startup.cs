@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using GraphQL;
 using GraphQL.Server;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using MyHotel.Entities;
 using MyHotel.EntityFrameworkCore;
 using MyHotel.GraphQL;
+using MyHotel.GraphQL.Client;
 using MyHotel.Models;
 using MyHotel.Repositories;
 
@@ -31,6 +33,8 @@ namespace MyHotel
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddHttpClient<MyHotelGraphqlClient>(x => x.BaseAddress = new Uri(MyHotelGraphqlClient.GraphqlAddress));
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

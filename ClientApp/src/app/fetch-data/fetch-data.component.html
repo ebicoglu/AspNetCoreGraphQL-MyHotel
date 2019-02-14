@@ -1,22 +1,52 @@
-<h1>Reservations ({{reservations ? reservations.length : 0}})</h1>
+<h1>Reservations {{reservations ? " ("+reservations.length+")" : ""}}</h1>
 
-<p *ngIf="!reservations"><em>Loading...</em></p>
+<div class="text-center">
 
-<table class='table' *ngIf="reservations">
-  <thead class="thead-dark">
-    <tr>
-      <th>Guest Name</th>
-      <th>Room Number</th>
-      <th>Checkin Date</th>
-      <th>Checkout Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let reservation of reservations">
-      <td>{{ reservation.guest.name }}</td>
-      <td>{{ reservation.room.number }}</td>
-      <td>{{ reservation.checkinDate | date: 'dd.MM.yyyy'}}</td>
-      <td>{{ reservation.checkoutDate | date: 'dd.MM.yyyy' }}</td>
-    </tr>
-  </tbody>
-</table>
+  <button class="mb-3" (click)="fetchFromRestApi()">
+    (1) Fetch From Old School RestAPI
+  </button>
+
+  <button class="mb-3 ml-3" (click)="fetchFromGrapQLClient()">
+    (2) Fetch From .NET GraphQL Client
+  </button>
+
+  <button class="mb-3 ml-3" (click)="fetchDirectlyFromGraphQL()">
+    (3) Fetch Directly From GraphQL
+  </button>
+
+</div>
+
+<p *ngIf="!reservations" class="text-center font-italic">Click buttons to get data from host.</p>
+
+<div *ngIf="reservations">
+  <p class="float-right font-italic">Fetched from <strong>{{fetchSource}}</strong></p>
+
+  <table class='table'>
+    <thead class="thead-dark">
+      <tr>
+        <th>Guest Name</th>
+        <th>Room Number</th>
+        <th>Checkin Date</th>
+        <th>Checkout Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reservation of reservations">
+        <td>{{ reservation.guest.name }}</td>
+        <td>{{ reservation.room.number }}</td>
+        <td>{{ reservation.checkinDate | date: 'dd.MM.yyyy'}}</td>
+        <td>{{ reservation.checkoutDate | date: 'dd.MM.yyyy' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr />
+
+  <h2>Raw data from host:</h2>
+  <code>
+    <pre style="background-color: whitesmoke; border: 1px ridge;">
+    {{ reservations | json }}
+  </pre>
+  </code>
+
+</div>

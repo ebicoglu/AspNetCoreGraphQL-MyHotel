@@ -83,10 +83,8 @@ namespace MyHotel.GraphQL
                             context.Errors.Add(new ExecutionError("reservationId must be greater than zero!"));
                             return new List<Reservation>();
                         }
-                        else
-                        {
-                            return reservationRepository.GetQuery().Where(r => r.Id == reservationId.Value);
-                        }
+
+                        return reservationRepository.GetQuery().Where(r => r.Id == reservationId.Value);
                     }
 
                     var checkinDate = context.GetArgument<DateTime?>("checkinDate");
