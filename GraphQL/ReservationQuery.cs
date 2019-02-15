@@ -10,7 +10,7 @@ using MyHotel.Repositories;
 
 namespace MyHotel.GraphQL
 {
-    public class MyHotelQuery : ObjectGraphType
+    public class ReservationQuery : ObjectGraphType
     {
         /*
          -- Simple test query --
@@ -37,7 +37,7 @@ namespace MyHotel.GraphQL
 
         */
 
-        public MyHotelQuery(ReservationRepository reservationRepository)
+        public ReservationQuery(ReservationRepository reservationRepository)
         {
             /*Version: 1 get all*/
             //Field<ListGraphType<ReservationType>>("reservations",

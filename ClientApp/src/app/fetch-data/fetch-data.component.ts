@@ -16,6 +16,9 @@ export class FetchDataComponent {
     this.baseUrl = baseUrl;
   }
 
+
+
+
   //////////////////////////   (1)   ////////////////////////////
   fetchFromRestApi(): any {
     this.http.get<Reservation[]>(this.baseUrl + 'api/Reservations/List').subscribe(result => {
@@ -77,7 +80,6 @@ export class FetchDataComponent {
 
   //////////////////////////   (5)   ////////////////////////////
   fetchUsingApolloClient(): any {
-
      
     var client = new Apollo.lib.ApolloClient(
       {
