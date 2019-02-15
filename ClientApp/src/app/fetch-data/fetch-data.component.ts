@@ -80,7 +80,8 @@ export class FetchDataComponent {
 
   //////////////////////////   (5)   ////////////////////////////
   fetchUsingApolloClient(): any {
-     
+    /*Apollo is declared in typings.d.ts file for Angular to be compiled */
+
     var client = new Apollo.lib.ApolloClient(
       {
         networkInterface: Apollo.lib.createNetworkInterface({
