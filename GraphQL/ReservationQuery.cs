@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using GraphQL;
 using GraphQL.Types;
+using LinqKit;
 using MyHotel.Entities;
 using MyHotel.GraphQL.Types;
 using MyHotel.Repositories;
@@ -13,10 +15,32 @@ namespace MyHotel.GraphQL
     public class ReservationQuery : ObjectGraphType
     {
         /*
-         -- Simple test query --
+         -- Simple test query (1) --
 
             query TestQuery {
               reservations {
+                id
+                checkinDate
+                checkoutDate
+                guest {
+                  id
+                  name
+                  registerDate
+                }
+                room {
+                  id
+                  name
+                  number
+                  allowedSmoking
+                  status
+                }
+              }
+            }
+
+        -- Simple test query (2) --
+
+            query TestQuery {
+              reservations (roomAllowedSmoking: true ,roomStatus: UNAVAILABLE){
                 id
                 checkinDate
                 checkoutDate
@@ -72,8 +96,7 @@ namespace MyHotel.GraphQL
                 {
                     var query = reservationRepository.GetQuery();
 
-                    var user = (ClaimsPrincipal)context.UserContext;
-                    var isUserAuthenticated = ((ClaimsIdentity) user.Identity).IsAuthenticated;
+                    Expression<Func<Reservation, bool>> predicate = p1 => p1.Id >= 0; //Get all (all Ids are greater than 0), maybe there is a better way I don't know
 
                     var reservationId = context.GetArgument<int?>("id");
                     if (reservationId.HasValue)
@@ -84,37 +107,34 @@ namespace MyHotel.GraphQL
                             return new List<Reservation>();
                         }
 
-                        return reservationRepository.GetQuery().Where(r => r.Id == reservationId.Value);
+                        predicate = predicate.And(r => r.Id == reservationId.Value);
                     }
 
                     var checkinDate = context.GetArgument<DateTime?>("checkinDate");
                     if (checkinDate.HasValue)
                     {
-                        return reservationRepository.GetQuery()
-                            .Where(r => r.CheckinDate.Date == checkinDate.Value.Date);
+                        predicate = predicate.And(r => r.CheckinDate.Date == checkinDate.Value.Date);
                     }
 
                     var checkoutDate = context.GetArgument<DateTime?>("checkoutDate");
                     if (checkoutDate.HasValue)
                     {
-                        return reservationRepository.GetQuery()
-                            .Where(r => r.CheckoutDate.Date >= checkoutDate.Value.Date);
+                        predicate = predicate.And(r => r.CheckoutDate.Date >= checkoutDate.Value.Date);
                     }
 
                     var allowedSmoking = context.GetArgument<bool?>("roomAllowedSmoking");
                     if (allowedSmoking.HasValue)
                     {
-                        return reservationRepository.GetQuery()
-                            .Where(r => r.Room.AllowedSmoking == allowedSmoking.Value);
+                        predicate = predicate.And(r => r.Room.AllowedSmoking == allowedSmoking.Value);
                     }
 
                     var roomStatus = context.GetArgument<RoomStatus?>("roomStatus");
                     if (roomStatus.HasValue)
                     {
-                        return reservationRepository.GetQuery().Where(r => r.Room.Status == roomStatus.Value);
+                        predicate = predicate.And(r => r.Room.Status == roomStatus.Value);
                     }
 
-                    return query.ToList();
+                    return query.Where(predicate).ToList();
                 }
             );
 

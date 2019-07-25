@@ -10,7 +10,9 @@ namespace MyHotel.EntityFrameworkCore
 
         public MyHotelDbContext(DbContextOptions<MyHotelDbContext> options)
             : base(options)
-        { }
+        {
+            Database.EnsureCreated();
+        }
 
         public DbSet<Reservation> Reservations { get; set; }
 
@@ -30,10 +32,12 @@ namespace MyHotel.EntityFrameworkCore
             modelBuilder.Entity<Room>().HasData(new Room(102, "blue-room", RoomStatus.Available, false) { Id = 2 });
             modelBuilder.Entity<Room>().HasData(new Room(103, "white-room", RoomStatus.Unavailable, false) { Id = 3 });
             modelBuilder.Entity<Room>().HasData(new Room(104, "black-room", RoomStatus.Unavailable, false) { Id = 4 });
+            modelBuilder.Entity<Room>().HasData(new Room(105, "green-room", RoomStatus.Unavailable, true) { Id = 5 });
 
             //RESERVATIONS
             modelBuilder.Entity<Reservation>().HasData(new Reservation(DateTime.Now.AddDays(-2), DateTime.Now.AddDays(3), 3, 1) { Id = 1 });
             modelBuilder.Entity<Reservation>().HasData(new Reservation(DateTime.Now.AddDays(-1), DateTime.Now.AddDays(4), 4, 2) { Id = 2 });
+            modelBuilder.Entity<Reservation>().HasData(new Reservation(DateTime.Now.AddDays(-3), DateTime.Now.AddDays(4), 5, 2) { Id = 3 });
 
 
             base.OnModelCreating(modelBuilder);
